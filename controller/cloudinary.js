@@ -1,7 +1,7 @@
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
-exports.uploadFile = (file, fileType, fileName) => {
+exports.uploadFile = (file) => {
     return new Promise((resolve, reject) => {
         cloudinary.config({
             cloud_name: process.env.CLOUD_NAME,
@@ -12,27 +12,22 @@ exports.uploadFile = (file, fileType, fileName) => {
 
         cloudinary.uploader.upload(
             file,
-            {
-                resourceType: fileType,
-
-                public_id: fileName,
-
-                overwrite: true,
-            },
             (error, result) => {
                 if (error) {
-                    fs.unlinkSync(file);
                     resolve({
                         status: false,
                         error: error.message,
                     });
                 } else {
-                    fs.unlinkSync(file);
+                    console.log(result);
                     resolve({
                         status: true,
                         fileUrl: result.secure_url,
                     });
                 }
+            },
+            {
+                resource_type: "auto",
             }
         );
     });
