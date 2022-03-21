@@ -1,6 +1,7 @@
+const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
-exports.uploadFile = (file) => {
+exports.uploadFile = (file, fileType, fileName) => {
     return new Promise((resolve, reject) => {
         cloudinary.config({
             cloud_name: process.env.CLOUD_NAME,
