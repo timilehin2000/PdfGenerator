@@ -4,7 +4,7 @@ const path = require("path");
 
 const PDFDocument = require("pdfkit");
 
-const uploadFile = require("./cloudinary");
+const upload = require("./cloudinary");
 
 exports.generatePdf = async (req, res) => {
     try {
@@ -34,22 +34,22 @@ exports.generatePdf = async (req, res) => {
 
         await pdfDoc.pipe(res);
 
-        await pdfDoc.text(content);
+        await content;
+
+        pdfDoc.text(content);
 
         //upload to cloudinary
-        let uploadPdf = await uploadFile.uploadFile(pdfPath);
-        console.log(uploadPdf);
+        upload.uploadFile(pdfPath).then((err, result) => {
+            if (result) {
+                console.log(result);
+            }
+        });
 
         pdfDoc.end();
-
-        // return res.status(200).json({
-        //     messgae: "Successfully uploaded generated PDF to cloudinary",
-        //     data: uploadPdf.fileUrl,
-        // });
     } catch (err) {
         console.log(err);
-        // res.status(404).json({
-        //     message: "Sorry, an error occured",
-        // });
+        res.status(404).json({
+            message: "Sorry, an error occured",
+        });
     }
 };
